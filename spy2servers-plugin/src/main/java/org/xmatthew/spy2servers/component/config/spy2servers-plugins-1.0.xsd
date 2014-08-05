@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns="http://www.xmatthew.org/spy2servers/schema"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:beans="http://www.springframework.org/schema/beans"
+		xmlns:tool="http://www.springframework.org/schema/tool"
+		targetNamespace="http://www.xmatthew.org/spy2servers/schema"
+		elementFormDefault="qualified"
+		attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans"/>
+	<xsd:import namespace="http://www.springframework.org/schema/tool"/>
+
+	<xsd:element name="activeMQJmxSpy">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:complexContent>
+				<xsd:extension base="sunJVMJmxSpyType">
+					<xsd:sequence>
+						<xsd:element ref="destinationNamesToWatch" minOccurs="0" maxOccurs="1"/>
+						<xsd:element ref="llegalIps" minOccurs="0" maxOccurs="1"/>
+					</xsd:sequence>	
+					<xsd:attribute name="queueSuspendNotifyTime" type="xsd:int"/>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="sunJVMJmxSpy" type="sunJVMJmxSpyType"/>
+	
+	<xsd:complexType name="sunJVMJmxSpyType">
+		<xsd:annotation>
+			<xsd:documentation>
+Defines a sunJVMJmxSpyType .
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="componentType">
+				<xsd:sequence>
+					<xsd:element ref="heapMemorySpy" minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="noneHeapMemorySpy" minOccurs="0" maxOccurs="1"/>
+					<xsd:element ref="fileSpy" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>			
+				<xsd:attribute name="host" type="xsd:string" use="required"/>
+				<xsd:attribute name="port" type="xsd:int" default="1099"/>
+				<xsd:attribute name="noneHeapMemorySpy" type="xsd:string"/>
+				<xsd:attribute name="detectInterval" type="xsd:long"/>
+			</xsd:extension>
+		</xsd:complexContent>
+
+	</xsd:complexType>
+
+	<xsd:element name="heapMemorySpy" type="memorySpyType"/>
+	<xsd:element name="noneHeapMemorySpy" type="memorySpyType"/>
+
+	<xsd:complexType name="memorySpyType">
+		<xsd:annotation>
+			<xsd:documentation>
+Defines a CoreComponent source channel adapter.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="memoryUsedPercentToAlert" type="xsd:float"/>
+		<xsd:attribute name="memoryUsedToAlert" type="xsd:long"/>
+		<xsd:attribute name="alertAfterKeepTimeLive" type="xsd:long" default="10"/>
+	</xsd:complexType>
+
+	<xsd:element name="fileSpy">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:attribute name="filesOpenedPercentToAlert" type="xsd:float"/>
+			<xsd:attribute name="filesOpenedToAlert" type="xsd:long"></xsd:attribute>
+			<xsd:attribute name="alertAfterKeepTimeLive" type="xsd:long" default="10"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="destinationNamesToWatch">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a sunJVMJmxSpyType .
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="queue" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>			
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="llegalIps">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a sunJVMJmxSpyType .
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="ip" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>			
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="queue" type="setValueType"/>
+	<xsd:element name="ip" type="setValueType"/>
+	<xsd:complexType name="setValueType">
+		<xsd:annotation>
+			<xsd:documentation>
+Defines a sunJVMJmxSpyType .
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="value" type="xsd:string" use="required"/>
+	</xsd:complexType>
+
+	<xsd:element name="tomcatJmxSpy">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:complexContent>
+				<xsd:extension base="sunJVMJmxSpyType">
+					<xsd:sequence>
+						<xsd:element ref="dataSourcesSpy" minOccurs="0" maxOccurs="1"/>
+						<xsd:element ref="webModuleSpy" minOccurs="0" maxOccurs="1"/>
+					</xsd:sequence>	
+				</xsd:extension>
+			</xsd:complexContent>			
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="dataSourcesSpy">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="dataSourceSpy" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="dataSourceSpy">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:attribute name="numActivePercentToAlert" type="xsd:float"/>
+			<xsd:attribute name="numActiveToAlert" type="xsd:int"/>
+			<xsd:attribute name="dataSourceName" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="webModuleSpy">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="module" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>	
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="module" type="setValueType"/>
+
+	<xsd:element name="emailAlert">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="emails" minOccurs="0" maxOccurs="1"/>
+				<xsd:element ref="emailAccount" minOccurs="1" maxOccurs="1"/>
+			</xsd:sequence>			
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="emails">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="email" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="email" type="setValueType"/>
+
+	<xsd:element name="emailAccount">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:attribute name="server" type="xsd:string"/>
+			<xsd:attribute name="serverPort" type="xsd:string"/>
+			<xsd:attribute name="loginName" type="xsd:string"/>
+			<xsd:attribute name="loginPwd" type="xsd:string"/>
+			<xsd:attribute name="sender" type="xsd:string"/>
+			<xsd:attribute name="sendNick" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>

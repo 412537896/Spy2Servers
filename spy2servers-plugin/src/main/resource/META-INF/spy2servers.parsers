@@ -1,0 +1,10 @@
+activeMQJmxSpy=org.xmatthew.spy2servers.component.config.ActiveMQJmxSpyComponentParser
+#memorySpy=org.xmatthew.spy2servers.component.config.MemorySpyParser
+#fileSpy=org.xmatthew.spy2servers.component.config.FileSpyParser
+#dataSourcesSpy=org.xmatthew.spy2servers.component.config.DataSourcesSpyParser
+#dataSourceSpy=org.xmatthew.spy2servers.component.config.DataSourceSpyParser
+sunJVMJmxSpy=org.xmatthew.spy2servers.component.config.SunJVMJmxSpyComponentParser
+tomcatJmxSpy=org.xmatthew.spy2servers.component.config.TomcatJmxSpyComponentParser
+#webModuleSpy=org.xmatthew.spy2servers.component.config.WebModuleSpyParser
+emailAlert=org.xmatthew.spy2servers.component.config.EmailAlertComponentParser
+#emailAccount=org.xmatthew.spy2servers.component.config.EmailAccountParser

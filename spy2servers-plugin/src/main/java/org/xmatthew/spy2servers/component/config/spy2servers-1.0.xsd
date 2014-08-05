@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns="http://www.xmatthew.org/spy2servers/schema"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:beans="http://www.springframework.org/schema/beans"
+		xmlns:tool="http://www.springframework.org/schema/tool"
+		targetNamespace="http://www.xmatthew.org/spy2servers/schema"
+		elementFormDefault="qualified"
+		attributeFormDefault="unqualified">
+
+	<xsd:include schemaLocation="http://www.xmatthew.org/spy2servers/schema/spy2servers-core-1.0.xsd"/>
+	<xsd:include schemaLocation="http://www.xmatthew.org/spy2servers/schema/spy2servers-plugins-1.0.xsd"/>
+
+</xsd:schema>

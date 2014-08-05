@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<bean class="org.xmatthew.spy2servers.core.CoreComponent">
+		<property name="alertRule" ref="simpleAlertRule"></property>
+	</bean>
+	<bean class="org.xmatthew.spy2servers.jmx.JmxServiceComponent">
+		<property name="port" value="1099"></property>
+	</bean>
+
+	<bean id="simpleAlertRule" class="org.xmatthew.spy2servers.rule.SimpleAlertRule">
+		<property name="channles">
+			<set>
+				<ref bean="channel1" />
+			</set>
+		</property>
+	</bean>
+	
+	<bean id="channel1" class="org.xmatthew.spy2servers.rule.Channel">
+		<property name="from">
+			<set>
+				<value>ActiveMQJmxSpyComponent</value>
+				<value>SunJVMJmxSpyComponent</value>
+				<value>TomcatJmxSpyComponent</value>
+			</set>
+		</property>
+		<property name="to">
+			<set>
+				<value>PrintScreenAlertComponent</value>
+				<!-- <value>EmailAlertComponent</value> -->
+			</set>
+		</property>
+	</bean>
+
+	<bean class="org.xmatthew.spy2servers.component.alert.PrintScreenAlertComponent"></bean>
+
+	<bean class="org.xmatthew.spy2servers.component.spy.jmx.ActiveMQJmxSpyComponent">
+		<property name="host" value="10.1.1.40"></property>
+		<property name="port" value="1099"></property>
+
+		<property name="heapMemorySpy">
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.MemorySpy">
+				<property name="memoryUsedPercentToAlert" value="5"></property>
+				<property name="alertAfterKeepTimeLive" value="10"></property>
+			</bean>
+		</property>
+		<property name="fileSpy">
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.FileSpy">
+				<property name="filesOpenedPercentToAlert" value="8"></property>
+				<property name="alertAfterKeepTimeLive" value="2"></property>
+			</bean>
+		</property>	
+		<property name="destinationNamesToWatch">
+			<set>
+				<!-- if blank will inspect all queue names -->
+				<value>Test.Queue</value>
+			</set>
+		</property>
+		<!-- if queue's consumers suspend for this time will alert  -->
+		<property name="queueSuspendNotifyTime" value="2000"></property>
+		<!-- any allow ip. if ip not in this list will component will alert -->
+		<property name="llegalIps">
+			<set>
+				<value>127.0.0.1</value>
+			</set>
+		</property>
+	</bean>
+		
+	<bean class="org.xmatthew.spy2servers.component.spy.jmx.TomcatJmxSpyComponent">
+		<!-- 监控的Jmx服务IP -->
+		<property name="host" value="10.1.1.16"></property>
+		<!-- 监控的Jmx服务端口 -->
+		<property name="port" value="8060"></property>
+		<!-- 监控时间间隔 单秒是 毫秒 -->
+		<property name="detectInterval" value="5000"></property>
+		
+		<property name="heapMemorySpy"> <!-- 堆内存 监控方案 -->
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.MemorySpy">
+				<!-- 设置临界值 内存使用的百分比 使用的内存值 / 最大内存值。 注如果该值设置， memoryUsedToAlert自动失效-->
+				<property name="memoryUsedPercentToAlert" value="5"></property>
+				<!-- 设置临界值 内存超过一定值后触发 单位 Mb -->
+				<!-- <property name="memoryUsedToAlert" value="100"></property> -->
+				<!-- 设置临界值保持多久后，开始报警 单位秒。 注该值没有默认值，如果不认置则不会触发报警操作 -->
+				<property name="alertAfterKeepTimeLive" value="10"></property>
+			</bean>
+		</property>
+		<property name="nonHeatMemorySpy"><!-- 非堆内存 监控方案 -->
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.MemorySpy">
+				<property name="memoryUsedToAlert" value="100"></property>
+				<property name="alertAfterKeepTimeLive" value="10"></property>
+			</bean>
+		</property>
+		<property name="fileSpy">
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.FileSpy">
+				<!-- 设置临界值 文件打开数百分比 开始的文件数 / 最大的文件数。  注如果该值设置， filesOpenedToAlert自动失效 -->
+				<property name="filesOpenedPercentToAlert" value="90"></property>
+				<!-- 设置临界值 文件打开数 -->
+				<!-- <property name="filesOpenedToAlert" value="1000"></property> -->
+				<!-- 设置临界值保持多久后，开始报警 单位秒。 注该值没有默认值，如果不认置则不会触发报警操作 -->
+				<property name="alertAfterKeepTimeLive" value="2"></property>
+			</bean>
+		</property>
+		
+		<property name="dataSourcesSpy"><!-- 文件IO打开数 监控方案 -->
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.DataSourcesSpy">
+				<property name="dataSourceSpys">
+					<set>
+						<bean class="org.xmatthew.spy2servers.component.spy.jmx.DataSourceSpy">
+							<!-- 设置临界值 连接池连接数占用比例 使用的连接数 / 最大的连接数。  注如果该值设置， numActiveToAlert自动失效 -->
+							<property name="numActivePercentToAlert" value="90"></property>
+							<!-- 设置临界值  连接池连目前使用的连接数 -->
+							<!-- <property name="numActiveToAlert" value="20"></property> -->
+							<property name="dataSourceName" value="jdbc/opendb"></property>
+						</bean>
+					</set>
+				</property>
+			</bean>
+		</property>	
+		
+		<property name="webModuleSpy"><!-- Web Module 监控方案 -->
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.WebModuleSpy">
+				<property name="webModules"> <!-- 监控的web module列表，如果模块状态为stop或undeploy则会报触发报警 -->
+					<set>
+						<value>/</value>
+						<value>/jsp-examples</value>
+						<value>/servlets-examples</value>
+					</set>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+ 
+	<bean class="org.xmatthew.spy2servers.component.alert.EmailAlertComponent">
+		<property name="emails" ref="emails"/>
+		<property name="emailAccount">
+			<bean class="org.xmatthew.spy2servers.component.alert.EmailAccount">
+				<property name="server" value="smtp.163.com"></property>
+				<property name="serverPort" value="25"></property>
+				<property name="loginName" value="ant_miracle"></property>
+				<property name="loginPwd" value="200010"></property>
+				<property name="sender" value="ant_miracle@163.com"></property>
+				<property name="sendNick" value="EmailAlertComponent"></property>
+			</bean>
+		</property>
+	</bean>
+
+	<util:list id="emails">
+	    <value>ant_miracle@163.com</value>
+	</util:list>
+	
+	<!--
+	<bean class="org.xmatthew.spy2servers.component.spy.jmx.SunJVMJmxSpyComponent">
+		<property name="host" value="10.1.1.40"></property>
+		<property name="port" value="8060"></property>
+		
+		<property name="heapMemorySpy">
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.MemorySpy">
+				<property name="memoryUsedPercentToAlert" value="5"></property>
+				<property name="alertAfterKeepTimeLive" value="10"></property>
+			</bean>
+		</property>
+		
+		<property name="fileSpy">
+			<bean class="org.xmatthew.spy2servers.component.spy.jmx.FileSpy">
+				<property name="filesOpenedPercentToAlert" value="8"></property>
+				<property name="alertAfterKeepTimeLive" value="2"></property>
+			</bean>
+		</property>
+	</bean>
+	-->
+</beans>

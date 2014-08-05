@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns="http://www.xmatthew.org/spy2servers/schema"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:beans="http://www.springframework.org/schema/beans"
+		xmlns:tool="http://www.springframework.org/schema/tool"
+		targetNamespace="http://www.xmatthew.org/spy2servers/schema"
+		elementFormDefault="qualified"
+		attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans"/>
+	<xsd:import namespace="http://www.springframework.org/schema/tool"/>
+
+	<xsd:complexType name="componentType">
+		<xsd:annotation>
+			<xsd:documentation>
+Defines a CoreComponent source channel adapter.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="name" type="xsd:string"/>			
+	</xsd:complexType>
+	
+	<xsd:element name="core-component">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a CoreComponent source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:complexContent>
+				<xsd:extension base="componentType">
+					<xsd:sequence>
+						<xsd:element ref="simple-alertRule" minOccurs="0" maxOccurs="1"/>
+					</xsd:sequence>	
+				</xsd:extension>
+			</xsd:complexContent>			
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="simple-alertRule">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a AlertRule source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="channel" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>				
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="channel">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a Channel source channel adapter.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="from" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="to" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>	
+		</xsd:complexType>
+	</xsd:element>
+
+	
+	<xsd:element name="from" type="channelValueType"/>
+	<xsd:element name="to" type="channelValueType"/>
+
+	<xsd:complexType name="channelValueType">
+		<xsd:annotation>
+			<xsd:documentation>
+	Defines a sunJVMJmxSpyType .
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="value" type="xsd:string" use="required"/>
+	</xsd:complexType>
+
+	<xsd:element name="jmxService-component">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:complexContent>
+				<xsd:extension base="componentType">
+					<xsd:attribute name="port" type="xsd:int" use="optional"/>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="spring-integerate-channel">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:complexContent>
+				<xsd:extension base="componentType">
+				<xsd:attribute name="integeration-channel" type="xsd:string" use="optional">
+						<xsd:annotation>
+							<xsd:appinfo>
+								<tool:annotation kind="ref">
+									<tool:expected-type type="org.springframework.integration.channel.AbstractMessageChannel"/>
+								</tool:annotation>
+							</xsd:appinfo>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="jetty">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="connectors" minOccurs="1" maxOccurs="1"/>
+				<xsd:element ref="handlers" minOccurs="0" maxOccurs="1"/>
+			</xsd:sequence>	
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="connectors">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="nioConnector" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>	
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="nioConnector">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:attribute name="port" type="xsd:int" use="required"/>
+			<xsd:attribute name="name" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="handlers">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:sequence>
+				<xsd:element ref="webAppContext" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="servlet" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>	
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="webAppContext">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:attribute name="contextPath" type="xsd:string" use="required"/>
+			<xsd:attribute name="resourceBase" type="xsd:string" use="required"/>
+			<xsd:attribute name="logUrlOnStart" type="xsd:boolean" default="true"/>
+		</xsd:complexType>
+	</xsd:element>	
+
+	<xsd:element name="servlet">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Defines a JmxService Component.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:attribute name="path" type="xsd:string" default="admin"/>
+			<xsd:attribute name="servletClass" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+
+
+	<xsd:element name="annotation-driven">
+		<xsd:complexType>
+			<xsd:annotation>
+				<xsd:documentation>
+	Enables the annotation-driven post-processors.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>
